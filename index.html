@@ -640,8 +640,8 @@
             <h1 class="editorial-title">Владислав <br>&<br> Ирина</h1>
             <div class="editorial-subtitle">Свадебная хроника</div>
             <div class="editorial-date">26 Августа 2026</div>
-            <button class="music-button" id="musicToggleBtn" onclick="toggleMusic()">
-                Включите, пожалуйста, музыку
+            <button class="music-button" id="musicToggleBtn">
+                 Включить музыку
             </button>
         </div>
     </section>
@@ -1028,73 +1028,67 @@
 
 
         // Музыка
+// Музыка
 let audio = null;
 let isMusicPlaying = false;
 
 function initMusic() {
     if (!audio) {
-        audio = new Audio();
+        audio = new Audio('1.mp3');
         audio.loop = true;
         audio.volume = 0.5;
         
-        // Укажите путь к вашей музыкальному файлу
-        const musicFiles = ['1.mp3'];
-        
-        for (let file of musicFiles) {
-            const testAudio = new Audio();
-            testAudio.src = file;
-            testAudio.addEventListener('canplaythrough', function() {
-                if (!audio.src) {
-                    audio.src = file;
-                }
-            });
-        }
-        
-        // Если ни один файл не загрузился, используем fallback
-        setTimeout(() => {
-            if (!audio.src) {
-                audio.src = 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_8c8c5b6c8a.mp3';
+        audio.addEventListener('error', function(e) {
+            console.log('Ошибка загрузки музыки:', e);
+            const btn = document.getElementById('musicToggleBtn');
+            if (btn) {
+                btn.innerHTML = '⚠️ Музыка не загружена';
+                btn.disabled = true;
             }
-        }, 1000);
+        });
     }
 }
 
 function toggleMusic() {
     const btn = document.getElementById('musicToggleBtn');
     
-    if (!audio || !audio.src) {
+    if (!audio) {
         initMusic();
-        setTimeout(() => {
-            toggleMusic();
-        }, 500);
-        return;
     }
     
     if (isMusicPlaying) {
         audio.pause();
         isMusicPlaying = false;
-        btn.innerHTML = ' Включите, пожалуйста, музыку';
+        btn.innerHTML = ' Включить музыку';
         btn.classList.remove('playing');
     } else {
-        // Для автозапуска музыки (нужно взаимодействие с пользователем)
-        audio.play().catch(error => {
-            console.log('Автовоспроизведение заблокировано:', error);
-            btn.innerHTML = ' Нажмите, чтобы включить музыку';
-        });
-        isMusicPlaying = true;
-        btn.innerHTML = ' Музыка играет';
-        btn.classList.add('playing');
+        // Прямой вызов play() по клику - это разрешено на iOS
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isMusicPlaying = true;
+                btn.innerHTML = ' Музыка играет';
+                btn.classList.add('playing');
+            }).catch(error => {
+                console.log('Ошибка воспроизведения:', error);
+                btn.innerHTML = '🎵 Нажмите для воспроизведения';
+                isMusicPlaying = false;
+            });
+        }
     }
 }
 
-// Обработка окончания трека
-if (audio) {
-    audio.addEventListener('ended', function() {
-        if (isMusicPlaying) {
-            audio.play();
-        }
-    });
-}
+// Инициализация музыки при первом клике
+document.addEventListener('DOMContentLoaded', function() {
+    const musicBtn = document.getElementById('musicToggleBtn');
+    if (musicBtn) {
+        musicBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleMusic();
+        });
+    }
+});
     </script>
 </body>
 </html>
