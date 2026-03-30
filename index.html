@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>МАКСИМ & АНАСТАСИЯ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50,85 C70,70 85,55 85,40 C85,25 70,15 60,15 C50,15 50,30 50,30 C50,30 50,15 40,15 C30,15 15,25 15,40 C15,55 30,70 50,85 Z' fill='%23f8e1e1' stroke='%23e0c7c7' stroke-width='3'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=Playfair+Display:wght@400;500;600;700&family=Noto+Serif:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pure-white: #FFFFFF;
+            --pure-black: #000000;
+            --gray-90: #0A0A0A;
+            --gray-80: #1A1A1A;
+            --gray-70: #2C2C2C;
+            --gray-10: #E8E8E8;
+            --gray-5: #F5F5F5;
+            --accent-gray: #7D7D7D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            font-family: 'Noto Serif', serif;
+            background-color: var(--pure-white);
+            color: var(--gray-90);
+            line-height: 1.6;
+            max-width: 100%;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior: none;
+        }
+        
+        /* ТИПОГРАФИКА */
+        h1, h2, h3, h4 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* ГЛАВНАЯ СТРАНИЦА С ФОТО */
+        .editorial-header {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            max-height: 1200px;
+            overflow: hidden;
+            background: var(--pure-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-photo-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--pure-black);
+        }
+        
+        .header-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+            filter: grayscale(100%) contrast(110%);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            will-change: transform, opacity;
+        }
+        
+        .header-photo.loaded {
+            opacity: 0.7;
+        }
+        
+        .header-photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        /* АНИМАЦИИ КАК В ПЕРВОМ ФАЙЛЕ */
+        .editorial-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 8vw, 6.5rem);
+            font-weight: 700;
+            letter-spacing: clamp(3px, 2vw, 8px);
+            color: var(--pure-white);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            line-height: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+        
+        .editorial-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 3vw, 1.8rem);
+            font-weight: 400;
+            letter-spacing: clamp(3px, 1.5vw, 6px);
+            color: var(--pure-white);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+        
+        .editorial-date {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            letter-spacing: clamp(2px, 1vw, 4px);
+            color: var(--pure-white);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px clamp(20px, 5vw, 40px);
+            display: inline-block;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 1.5s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ЭДИТОРИАЛЬНАЯ СЕКЦИЯ */
+        .editorial-section {
+            padding: clamp(60px, 10vw, 120px) clamp(15px, 3vw, 20px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .editorial-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(30px, 5vw, 80px);
+            align-items: center;
+        }
+        
+        .editorial-image {
+            width: 100%;
+            height: clamp(400px, 60vh, 700px);
+            object-fit: cover;
+            object-position: center;
+            filter: grayscale(100%) contrast(110%);
+            transition: filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: filter;
+        }
+        
+        .editorial-image:hover {
+            filter: grayscale(100%) contrast(130%);
+        }
+        
+        .editorial-text {
+            padding: clamp(20px, 3vw, 40px);
+        }
+        
+        .section-number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            font-weight: 400;
+            letter-spacing: clamp(2px, 0.5vw, 3px);
+            color: var(--accent-gray);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        
+        .section-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 600;
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            margin-bottom: 40px;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+        
+        .editorial-body {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.8;
+            color: var(--gray-70);
+            margin-bottom: 40px;
+        }
+        
+        .editorial-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            line-height: 1.5;
+            color: var(--gray-80);
+            font-style: italic;
+            padding: clamp(20px, 4vw, 40px) 0;
+            border-top: 1px solid var(--gray-10);
+            border-bottom: 1px solid var(--gray-10);
+            margin: clamp(20px, 4vw, 40px) 0;
+        }
+        
+        /* ФОТОРЕПОРТАЖ */
+        .photo-reportage {
+            padding: clamp(40px, 6vw, 80px) clamp(15px, 3vw, 20px);
+            background: var(--gray-5);
+        }
+        
+        .reportage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .reportage-item {
+            position: relative;
+            overflow: hidden;
+            height: clamp(300px, 40vh, 500px);
+        }
+        
+        .reportage-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: grayscale(100%) contrast(120%);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        
+        .reportage-item:hover .reportage-image {
+            transform: scale(1.05);
+        }
+        
+        .reportage-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: clamp(15px, 3vw, 30px);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: var(--pure-white);
+            transform: translateY(100%);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        
+        .reportage-item:hover .reportage-caption {
+            transform: translateY(0);
+        }
+        
+        .caption-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        /* СВАДЕБНЫЕ ДЕТАЛИ */
+        .details-editorial {
+            padding: clamp(60px, 10vw, 120px) clamp(15px, 3vw, 20px);
+            background: var(--pure-white);
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(30px, 4vw, 60px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .detail-item {
+            text-align: center;
+        }
+        
+        .detail-number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            color: var(--pure-black);
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+        
+        .detail-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .detail-text {
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            color: var(--gray-70);
+            line-height: 1.6;
+        }
+        
+        /* КОНТАКТНАЯ СЕКЦИЯ */
+        .contact-editorial {
+            padding: clamp(60px, 10vw, 100px) clamp(15px, 3vw, 20px);
+            background: var(--pure-white);
+            border-top: 1px solid var(--gray-10);
+        }
+        
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .contact-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 20px;
+            letter-spacing: clamp(2px, 1vw, 3px);
+            text-transform: uppercase;
+        }
+        
+        .contact-subtitle {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--accent-gray);
+            margin-bottom: 50px;
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            text-transform: uppercase;
+        }
+        
+        /* ФОРМА ПОДТВЕРЖДЕНИЯ */
+        .confirmation-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+            margin-bottom: 8px;
+            color: var(--gray-70);
+            text-transform: uppercase;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            font-family: 'Noto Serif', serif;
+            font-size: 1rem;
+            border: 1px solid var(--gray-10);
+            background: var(--pure-white);
+            color: var(--gray-90);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--pure-black);
+        }
+        
+        .attendance-options {
+            display: flex;
+            gap: clamp(10px, 2vw, 20px);
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .attendance-option {
+            flex: 1;
+        }
+        
+        .radio-label {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--gray-10);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Noto Serif', serif;
+            touch-action: manipulation;
+        }
+        
+        .radio-input {
+            display: none;
+        }
+        
+        .radio-input:checked + .radio-label {
+            background: var(--pure-black);
+            color: var(--pure-white);
+            border-color: var(--pure-black);
+        }
+        
+        .submit-button {
+            width: 100%;
+            padding: 20px;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            background: var(--pure-white);
+            color: var(--pure-black);
+            border: 1px solid var(--pure-black);
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 20px;
+            touch-action: manipulation;
+        }
+        
+        .submit-button:hover {
+            background: var(--pure-black);
+            color: var(--pure-white);
+        }
+        
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .form-message {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Noto Serif', serif;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .form-message.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .form-message.success {
+            background: var(--gray-5);
+            color: var(--gray-80);
+            border-left: 3px solid var(--pure-black);
+        }
+        
+        .form-message.error {
+            background: #FFF5F5;
+            color: #C53030;
+            border-left: 3px solid #C53030;
+        }
+        
+        /* ФУТЕР */
+        .editorial-footer {
+            padding: clamp(40px, 6vw, 60px) clamp(15px, 3vw, 20px);
+            background: var(--pure-black);
+            color: var(--pure-white);
+            text-align: center;
+        }
+        
+        .footer-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            letter-spacing: clamp(3px, 2vw, 8px);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        
+        .footer-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            letter-spacing: clamp(2px, 1vw, 4px);
+            color: var(--accent-gray);
+            text-transform: uppercase;
+        }
+        
+        /* РАЗДЕЛИТЕЛЬ */
+        .divider {
+            height: 1px;
+            background: var(--gray-10);
+            margin: clamp(40px, 6vw, 80px) auto;
+            max-width: 1400px;
+        }
+        
+        .page-number {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--accent-gray);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .page-number.show {
+            opacity: 1;
+        }
+        
+        /* ПЛАВНЫЕ АНИМАЦИИ */
+        @keyframes ultraSmoothFadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(15px) scale(0.995);
+            }
+            40% {
+                opacity: 0.4;
+                transform: translateY(10px) scale(0.998);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes gentleFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .animate-element {
+            opacity: 0;
+            animation: ultraSmoothFadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            will-change: transform, opacity;
+        }
+        
+        .delay-1 { animation-delay: 0.4s; }
+        .delay-2 { animation-delay: 0.8s; }
+        
+        .footer-animate {
+            opacity: 0;
+            animation: gentleFadeIn 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            will-change: opacity;
+            animation-delay: 0.3s;
+        }
+        
+        /* СКРОЛЛ-АНИМАЦИИ */
+        .scroll-trigger {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform, opacity;
+        }
+        
+        .scroll-trigger.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 1200px) {
+            .editorial-layout {
+                gap: clamp(30px, 4vw, 50px);
+            }
+            
+            .details-grid {
+                gap: clamp(20px, 3vw, 40px);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .editorial-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .editorial-text {
+                padding: 0;
+            }
+            
+            .reportage-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .editorial-header {
+                min-height: 500px;
+            }
+            
+            .reportage-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reportage-item {
+                height: clamp(250px, 50vh, 400px);
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .attendance-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .page-number {
+                display: none;
+            }
+            
+            @supports (-webkit-touch-callout: none) {
+                .editorial-header {
+                    height: -webkit-fill-available;
+                    min-height: -webkit-fill-available;
+                }
+                
+                .header-photo {
+                    height: 100vh;
+                    height: -webkit-fill-available;
+                }
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .editorial-header {
+                min-height: 450px;
+            }
+            
+            .editorial-section {
+                padding: 40px 15px;
+            }
+            
+            .contact-title {
+                font-size: 1.8rem;
+            }
+            
+            .confirmation-form {
+                padding: 0;
+            }
+            
+            .form-input, .radio-label, .submit-button {
+                padding: 12px;
+            }
+        }
+        
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .editorial-header {
+                height: 100svh;
+                min-height: 100svh;
+            }
+            
+            .header-photo {
+                height: 100%;
+                min-height: 100%;
+            }
+            
+            .editorial-title {
+                margin-bottom: 1rem;
+            }
+            
+            .editorial-subtitle {
+                margin-bottom: 2rem;
+            }
+        }
+        
+        .performance-optimize {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <!-- НОМЕР СТРАНИЦЫ -->
+    <div class="page-number">01</div>
+    
+    <!-- ГЛАВНАЯ СТРАНИЦА С ФОТО -->
+    <section class="editorial-header">
+        <div class="header-photo-container">
+            <img src="111.jpg" alt="Максим и Анастасия" class="header-photo" 
+                 loading="eager" 
+                 decoding="async"
+                 crossorigin="anonymous">
+            <div class="header-photo-overlay"></div>
+        </div>
+        <div class="header-content">
+            <h1 class="editorial-title">Владислав <br>&<br> Ирина</h1>
+            <div class="editorial-subtitle">Свадебная хроника</div>
+            <div class="editorial-date">26 Августа 2026</div>
+        </div>
+    </section>
+    
+    <!-- ЭДИТОРИАЛЬНАЯ СТАТЬЯ -->
+    <section class="editorial-section scroll-trigger">
+        <div class="editorial-layout">
+            <div class="editorial-image-container">
+                <img src="111.jpg" alt="Обручальные кольца" class="editorial-image performance-optimize">
+            </div>
+            <div class="editorial-text">
+                <div class="section-number">01 / История</div>
+                <h2 class="section-title">Наша история</h2>
+                <div class="editorial-body">
+                    Три года назад судьба соединила нас, и с тех пор наша жизнь наполнилась теплом, радостью и любовью. <br> <br>
+                    С каждым днём мы становились ближе друг к другу, и теперь готовы начать новую главу нашей истории.
+                </div>
+                <!-- <div class="editorial-quote">
+                    С каждым днём мы становились ближе друг к другу, и теперь готовы начать новую главу нашей истории.
+                </div> -->
+                <div class="editorial-body">
+                    Мы будем счастливы разделить этот особенный момент вместе с вами
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="divider"></div>
+    
+    <!-- ФОТОРЕПОРТАЖ -->
+    <!-- <section class="photo-reportage scroll-trigger">
+        <div class="reportage-grid">
+            <div class="reportage-item">
+                <img src="11.jpg" alt="Молодожены" class="reportage-image performance-optimize">
+                <div class="reportage-caption">
+                    <div class="caption-title">Первый шаг</div>
+                    <div class="caption-subtitle">Начало совместного пути</div>
+                </div>
+            </div>
+            <div class="reportage-item">
+                <img src="22.jpg" alt="Кольца" class="reportage-image performance-optimize">
+                <div class="reportage-caption">
+                    <div class="caption-title">Особенные чувства</div>
+                    <div class="caption-subtitle">В каждом моменте</div>
+                </div>
+            </div>
+            <div class="reportage-item">
+                <img src="33.jpg" alt="Букет" class="reportage-image performance-optimize">
+                <div class="reportage-caption">
+                    <div class="caption-title">Нежность</div>
+                    <div class="caption-subtitle">Невозможно друг без друга</div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+    
+    <!-- ДЕТАЛИ СВАДЬБЫ -->
+    <section class="details-editorial scroll-trigger">
+        <div class="section-number" style="text-align: center; margin-bottom: 60px;">02 / Детали</div>
+        <div class="details-grid">
+            <div class="detail-item">
+                <div class="detail-number">17:00</div>
+                <h3 class="detail-title">Фуршет</h3>
+                <div class="detail-text">
+                    Трогательный момент<br>
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-number">18:00</div>
+                <h3 class="detail-title">Банкет</h3>
+                <div class="detail-text">
+                    Ресторан "Ruvi"<br>
+                    ул. Трунова, 39<br>
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-number">Dress<br>Code</div>
+                <h3 class="detail-title">Дресс-код</h3>
+                <div class="detail-text">
+                    Черно-белая палитра<br>
+                    Для дам — элегантные коктейльные платья или костюмы<br>
+                    Для мужчин — рубашки или поло
+                </div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-number">RSVP</div>
+                <h3 class="detail-title">Подтверждение</h3>
+                <div class="detail-text">
+                    До 1 июля 2026<br>
+                    Укажите количество<br>
+                    гостей и предпочтения
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- ЭДИТОРИАЛЬНАЯ СТАТЬЯ -->
+    <section class="editorial-section scroll-trigger">
+        <div class="editorial-layout">
+            <div class="editorial-text">
+                <div class="section-number">03 / Пожелания</div>    
+                <h2 class="section-title">Пожелания</h2>
+                <div class="editorial-body">
+                     Вместо цветов с благодарностью примем лотерейные билеты <br> <br>
+
+                </div>
+                <!-- <div class="editorial-quote">
+                    Пусть этот маленький подарок добавит изысканную нотку радости и удачи нашему праздник
+                </div> -->
+                <div class="editorial-body">
+                    Пусть этот маленький подарок добавит изысканную нотку радости и удачи нашему праздник
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- КОНТАКТЫ И ФОРМА ПОДТВЕРЖДЕНИЯ -->
+    <section class="contact-editorial scroll-trigger">
+        <div class="contact-container">
+            <div class="section-number" style="margin-bottom: 30px;">04 / Подтверждение</div>
+            <h2 class="contact-title">Ваше присутствие</h2>
+            <div class="contact-subtitle">Подтвердите участие до 1 июля 2026</div>
+            
+            <form id="confirmationForm" class="confirmation-form">
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Имя и фамилия *</label>
+                    <input type="text" id="fullName" name="fullName" class="form-input" required placeholder="Иван Иванов">
+                </div>
+                
+                <!-- <div class="form-group">
+                    <label class="form-label" for="phone">Номер телефона *</label>
+                    <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+7 (900) 123-45-67">
+                </div> -->
+                
+                <div class="form-group">
+                    <label class="form-label">Подтверждение присутствия *</label>
+                    <div class="attendance-options">
+                        <div class="attendance-option">
+                            <input type="radio" id="attending" name="attendance" value="Присутствую" class="radio-input" required>
+                            <label for="attending" class="radio-label">Присутствую</label>
+                        </div>
+                        <div class="attendance-option">
+                            <input type="radio" id="notAttending" name="attendance" value="Не смогу присутствовать" class="radio-input">
+                            <label for="notAttending" class="radio-label">Не смогу</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <div class="form-group">
+                    <label class="form-label" for="guests">Количество гостей (включая вас)</label>
+                    <select id="guests" name="guests" class="form-input">
+                        <option value="1">1 человек</option>
+                        <option value="2" selected>2 человека</option>
+                        <option value="3">3 человека</option>
+                        <option value="4">4 человека</option>
+                        <option value="5">5+ человек</option>
+                    </select>
+                </div> -->
+                
+                <div class="form-group">
+                    <label class="form-label" for="comments">Дополнительные пожелания</label>
+                    <textarea id="comments" name="comments" class="form-input" rows="3" placeholder="Аллергии, диетические предпочтения, музыкальные пожелания..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-button" id="submitBtn">
+                    Отправить подтверждение
+                </button>
+                
+                <div id="formMessage" class="form-message"></div>
+            </form>
+        </div>
+    </section>
+    
+    <!-- ФУТЕР -->
+    <footer class="editorial-footer footer-animate">
+        <div class="footer-title">26.08.2026</div>
+        <div class="footer-subtitle">Владислав & Ирина</div>
+    </footer>
+    
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySQaR8qD4oRC7l3TNycKHh8u_2ct8MXiqo60GGNGjoBerCOODFevtcrRSL/exec';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Свадебное приглашение загружено');
+            
+            // ОБРАБОТКА ГЛАВНОГО ФОТО С ИСПРАВЛЕНИЕМ ПРОБЛЕМЫ ЗАГРУЗКИ
+            const headerPhoto = document.querySelector('.header-photo');
+            
+            function initHeaderPhoto() {
+                if (!headerPhoto) return;
+                
+                // ПРЕДОТВРАЩАЕМ КЕШИРОВАНИЕ ПРОБЛЕМЫ
+                const timestamp = new Date().getTime();
+                let photoSrc = '11.jpg';
+                
+                // Добавляем параметр времени, чтобы избежать кеширования при проблемах
+                if (sessionStorage.getItem('headerPhotoError')) {
+                    photoSrc = '11.jpg?' + timestamp;
+                    console.log('Предыдущая ошибка загрузки, добавляем timestamp');
+                }
+                
+                headerPhoto.src = photoSrc;
+                headerPhoto.loading = 'eager';
+                headerPhoto.decoding = 'async';
+                headerPhoto.crossOrigin = 'anonymous';
+                
+                let loadAttempts = 0;
+                const maxLoadAttempts = 2;
+                
+                function loadPhoto() {
+                    loadAttempts++;
+                    
+                    if (loadAttempts > maxLoadAttempts) {
+                        console.log('Не удалось загрузить фото после всех попыток');
+                        showPhotoFallback();
+                        return;
+                    }
+                    
+                    // Сбрасываем src для перезагрузки
+                    if (loadAttempts > 1) {
+                        headerPhoto.src = '11.jpg?' + new Date().getTime();
+                    }
+                    
+                    headerPhoto.onload = function() {
+                        console.log('Главное фото загружено, попытка:', loadAttempts);
+                        this.classList.add('loaded');
+                        sessionStorage.removeItem('headerPhotoError');
+                    };
+                    
+                    headerPhoto.onerror = function() {
+                        console.log('Ошибка загрузки главного фото, попытка:', loadAttempts);
+                        sessionStorage.setItem('headerPhotoError', 'true');
+                        
+                        if (loadAttempts < maxLoadAttempts) {
+                            // Пробуем снова через 500ms
+                            setTimeout(loadPhoto, 500);
+                        } else {
+                            showPhotoFallback();
+                        }
+                    };
+                }
+                
+                function showPhotoFallback() {
+                    // Создаем градиентный фон как запасной вариант
+                    const container = document.querySelector('.header-photo-container');
+                    if (container) {
+                        container.style.background = 'linear-gradient(45deg, #0A0A0A 0%, #2C2C2C 50%, #0A0A0A 100%)';
+                        container.style.backgroundSize = '400% 400%';
+                        container.style.animation = 'gradientBG 15s ease infinite';
+                    }
+                    headerPhoto.style.display = 'none';
+                }
+                
+                // Запускаем загрузку
+                loadPhoto();
+                
+                // Автоматически показываем запасной вариант, если фото не загрузилось за 3 секунды
+                setTimeout(() => {
+                    if (!headerPhoto.classList.contains('loaded')) {
+                        console.log('Фото слишком долго загружается, показываем запасной вариант');
+                        showPhotoFallback();
+                    }
+                }, 3000);
+            }
+            
+            // Запускаем инициализацию главного фото
+            initHeaderPhoto();
+            
+            // Обработка остальных изображений
+            const allImages = document.querySelectorAll('img:not(.header-photo)');
+            allImages.forEach(img => {
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                
+                img.onerror = function() {
+                    const parent = this.parentElement;
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(45deg, #0A0A0A 25%, #1A1A1A 25%, #1A1A1A 50%, #0A0A0A 50%, #0A0A0A 75%, #1A1A1A 75%, #1A1A1A);
+                        background-size: 20px 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #7D7D7D;
+                        font-family: 'Bodoni Moda', serif;
+                        font-size: 1.2rem;
+                        letter-spacing: 2px;
+                    `;
+                    
+                    if (this.src.includes('11.jpg')) {
+                        placeholder.innerHTML = 'МОЛОДОЖЕНЫ';
+                    } else if (this.src.includes('22.jpg')) {
+                        placeholder.innerHTML = 'КОЛЬЦА';
+                    } else if (this.src.includes('33.jpg')) {
+                        placeholder.innerHTML = 'БУКЕТ';
+                    }
+                    
+                    parent.appendChild(placeholder);
+                    this.style.display = 'none';
+                };
+                
+                img.onload = function() {
+                    this.style.opacity = '0';
+                    requestAnimationFrame(() => {
+                        this.style.transition = 'opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                        this.style.opacity = '1';
+                    });
+                };
+            });
+            
+            // Обработка формы
+            const confirmationForm = document.getElementById('confirmationForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+            
+            confirmationForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    fullName: formData.get('fullName'),
+                    attendance: formData.get('attendance'),
+                    comments: formData.get('comments'),
+                    date: new Date().toLocaleString('ru-RU'),
+                    page: 'Свадебное приглашение Владислав & Ирина'
+                };
+
+                if (!data.fullName || !data.attendance) {
+                    showMessage('Пожалуйста, заполните все обязательные поля', 'error');
+                    return;
+                }
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Отправка...';
+                showMessage('Отправляем ваше подтверждение...', 'success');
+                
+                try {
+                    const googleResponse = await sendToGoogleSheets(data);
+                    
+                    if (googleResponse.success) {
+                        showMessage('Спасибо! Ваше подтверждение успешно отправлено организаторам.', 'success');
+                        confirmationForm.reset();
+                        
+                    } else {
+                        throw new Error('Ошибка отправки в Google Sheets');
+                    }
+                } catch (error) {
+                    console.error('Ошибка отправки:', error);
+                    showMessage('Ошибка при отправке. Пожалуйста, попробуйте еще раз или свяжитесь с нами другим способом.', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить подтверждение';
+                    
+                    setTimeout(() => {
+                        formMessage.classList.remove('show');
+                        setTimeout(() => {
+                            formMessage.style.display = 'none';
+                        }, 600);
+                    }, 5000);
+                }
+            });
+            
+            async function sendToGoogleSheets(data) {
+                const params = new URLSearchParams();
+                params.append('fullName', data.fullName);
+                params.append('attendance', data.attendance);
+                params.append('comments', data.comments || '');
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params.toString()
+                });
+                
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            }
+            
+            function showMessage(text, type) {
+                formMessage.textContent = text;
+                formMessage.className = `form-message ${type}`;
+                formMessage.style.display = 'block';
+                
+                requestAnimationFrame(() => {
+                    formMessage.classList.add('show');
+                });
+            }
+            
+            // Маска для телефона
+            // const phoneInput = document.getElementById('phone');
+            // phoneInput.addEventListener('input', function(e) {
+            //     let value = this.value.replace(/\D/g, '');
+                
+            //     if (value.startsWith('7') || value.startsWith('8')) {
+            //         value = value.substring(1);
+            //     }
+                
+            //     let formattedValue = '+7';
+            //     if (value.length > 0) {
+            //         formattedValue += ' (' + value.substring(0, 3);
+            //     }
+            //     if (value.length > 3) {
+            //         formattedValue += ') ' + value.substring(3, 6);
+            //     }
+            //     if (value.length > 6) {
+            //         formattedValue += '-' + value.substring(6, 8);
+            //     }
+            //     if (value.length > 8) {
+            //         formattedValue += '-' + value.substring(8, 10);
+            //     }
+                
+            //     this.value = formattedValue;
+            // });
+            
+            // Плавные анимации при скролле
+            const scrollTriggers = document.querySelectorAll('.scroll-trigger');
+            let ticking = false;
+            
+            function checkScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        scrollTriggers.forEach(trigger => {
+                            const triggerTop = trigger.getBoundingClientRect().top;
+                            
+                            if (triggerTop < window.innerHeight * 0.85) {
+                                trigger.classList.add('visible');
+                            }
+                        });
+                        
+                        const pageNumber = document.querySelector('.page-number');
+                        if (pageNumber) {
+                            const scrollPercent = (window.pageYOffset / (document.body.scrollHeight - window.innerHeight)) * 100;
+                            const pageNum = Math.floor(scrollPercent / 20) + 1;
+                            pageNumber.textContent = pageNum.toString().padStart(2, '0');
+                            
+                            if (window.pageYOffset > 100) {
+                                pageNumber.classList.add('show');
+                            } else {
+                                pageNumber.classList.remove('show');
+                            }
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', checkScroll, { passive: true });
+            window.addEventListener('resize', checkScroll, { passive: true });
+            setTimeout(checkScroll, 100);
+            
+            // Исправление высоты хедера
+            function fixHeaderHeight() {
+                const header = document.querySelector('.editorial-header');
+                if (header && window.innerWidth <= 768) {
+                    const vh = window.innerHeight * 0.01;
+                    header.style.height = `calc(${vh * 100}px)`;
+                    header.style.minHeight = `calc(${vh * 100}px)`;
+                }
+            }
+            
+            window.addEventListener('resize', fixHeaderHeight, { passive: true });
+            fixHeaderHeight();
+            
+            // Плавное появление страницы
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+        
+        window.addEventListener('load', function() {
+            const footer = document.querySelector('.editorial-footer');
+            if (footer) {
+                setTimeout(() => {
+                    footer.classList.add('footer-animate');
+                }, 500);
+            }
+            
+            setTimeout(() => {
+                const pageNumber = document.querySelector('.page-number');
+                if (pageNumber && window.pageYOffset > 0) {
+                    pageNumber.classList.add('show');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
